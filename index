@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SubBurn India | Audit Your Monthly Subscriptions & Autopay Leaks</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- html2canvas for story export -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .story-card-gradient {
+      background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased selection:bg-rose-500 selection:text-white">
+
+  <!-- Top Sticky Banner (Live Calculation) -->
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 shadow-2xl">
+    <div class="max-w-4xl mx-auto px-4 py-4 flex flex-wrap items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="inline-block w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+          <span class="text-xs uppercase tracking-widest font-bold text-rose-400">Autopay Reality Check</span>
+        </div>
+        <h1 class="text-lg md:text-xl font-extrabold tracking-tight">SubBurn<span class="text-rose-500">.in</span></h1>
+      </div>
+
+      <div class="flex items-center gap-6">
+        <div class="text-right">
+          <p class="text-xs text-slate-400 font-medium">Monthly Burn</p>
+          <p id="topMonthly" class="text-xl md:text-2xl font-black text-rose-400">₹0</p>
+        </div>
+        <div class="text-right hidden sm:block border-l border-slate-800 pl-6">
+          <p class="text-xs text-slate-400 font-medium">Annual Drain</p>
+          <p id="topAnnual" class="text-xl md:text-2xl font-black text-amber-400">₹0</p>
+        </div>
+        <button onclick="openExportModal()" class="px-4 py-2 bg-rose-600 hover:bg-rose-500 transition text-white text-xs md:text-sm font-bold rounded-xl shadow-lg shadow-rose-600/30 active:scale-95">
+          Share Card 📸
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 py-8 space-y-10">
+
+    <!-- Hero / Headline -->
+    <section class="text-center space-y-3 pt-2">
+      <h2 class="text-3xl md:text-5xl font-black tracking-tight text-white">
+        Where did all my <span class="bg-gradient-to-r from-rose-400 to-amber-300 bg-clip-text text-transparent">money go?</span>
+      </h2>
+      <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+        Tap the services you pay for or have on UPI Autopay. See your actual monthly drain and the 10-year investment cost.
+      </p>
+    </section>
+
+    <!-- Stats Dashboard Cards -->
+    <section class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 relative overflow-hidden">
+        <div class="absolute -right-4 -bottom-4 text-7xl opacity-5 select-none font-black">₹</div>
+        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400 mb-1">Monthly Leaks</p>
+        <p id="statMonthly" class="text-3xl font-extrabold text-white">₹0</p>
+        <p class="text-xs text-slate-500 mt-2">Deducted silently via cards & UPI</p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/60 border border-slate-800 relative overflow-hidden">
+        <div class="absolute -right-4 -bottom-4 text-7xl opacity-5 select-none font-black">🗓️</div>
+        <p class="text-xs uppercase tracking-wider font-semibold text-slate-400 mb-1">Annual Bleed</p>
+        <p id="statAnnual" class="text-3xl font-extrabold text-amber-400">₹0</p>
+        <p id="statEquivalent" class="text-xs text-slate-400 mt-2">Equivalent to: 0 plates of Biryani</p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-slate-900/60 border border-rose-900/40 bg-gradient-to-br from-rose-950/20 to-transparent relative overflow-hidden">
+        <div class="absolute -right-4 -bottom-4 text-7xl opacity-10 select-none font-black text-rose-500">📈</div>
+        <p class="text-xs uppercase tracking-wider font-semibold text-rose-300 mb-1">10-Yr SIP Cost (@12%)</p>
+        <p id="statSIP" class="text-3xl font-extrabold text-rose-400">₹0</p>
+        <p class="text-xs text-rose-300/80 mt-2">If invested in a Nifty 50 Index Fund</p>
+      </div>
+    </section>
+
+    <!-- Affiliate Card Recommendation Slot (Monetization Engine) -->
+    <section id="affiliateBanner" class="p-5 rounded-2xl bg-gradient-to-r from-indigo-950/40 via-purple-950/30 to-slate-900 border border-indigo-800/40 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="space-y-1 text-center sm:text-left">
+        <span class="inline-block px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 text-[10px] font-bold tracking-wider uppercase">Smart Offset</span>
+        <h3 class="text-sm md:text-base font-bold text-white">Earn back ₹300–₹500/mo on these exact apps</h3>
+        <p class="text-xs text-slate-400">Cards like HDFC Swiggy, Airtel Axis, or SBI Cashback give 5%–10% direct cashback on OTT & food orders.</p>
+      </div>
+      <a href="#affiliate-link" target="_blank" class="whitespace-nowrap px-4 py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-indigo-600/30 transition">
+        Compare Cashback Cards →
+      </a>
+    </section>
+
+    <!-- Interactive Subscriptions Grid -->
+    <section class="space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-white">Tap Your Active Subscriptions</h3>
+        <span id="selectedCount" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-slate-800 text-slate-300">0 selected</span>
+      </div>
+
+      <div id="subsGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- Custom Subscription Input -->
+    <section class="p-5 rounded-2xl bg-slate-900/40 border border-slate-800">
+      <h3 class="text-sm font-bold text-white mb-3">Add Custom Recurring Expense (Gym, Maid, Milk, Rent)</h3>
+      <div class="flex flex-col sm:flex-row gap-3">
+        <input id="customName" type="text" placeholder="e.g. Cult.fit or Society Maintenance" class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+        <input id="customAmount" type="number" placeholder="₹ Amount / Month" class="w-full sm:w-44 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-rose-500">
+        <button onclick="addCustomSub()" class="px-5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-xl transition">
+          + Add
+        </button>
+      </div>
+    </section>
+
+    <!-- Cancellation Guide (Value & Bookmark Magnet) -->
+    <section class="p-6 rounded-2xl bg-slate-900/80 border border-slate-800 space-y-4">
+      <div class="space-y-1">
+        <h3 class="text-lg font-bold text-white">How to Stop Silent UPI Autopay Deductions</h3>
+        <p class="text-xs text-slate-400">Cancel unwanted recurring mandates in under 30 seconds directly in your payment apps.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
+          <h4 class="font-bold text-sm text-amber-400">PhonePe</h4>
+          <p class="text-xs text-slate-300">Profile Icon (Top Left) → <strong>AutoPay Settings</strong> → Tap the active mandate → Click <strong>Remove AutoPay</strong>.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
+          <h4 class="font-bold text-sm text-emerald-400">Google Pay (GPay)</h4>
+          <p class="text-xs text-slate-300">Profile Picture (Top Right) → <strong>Autopay</strong> → Select service → Tap <strong>Cancel AutoPay</strong>.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
+          <h4 class="font-bold text-sm text-sky-400">Paytm</h4>
+          <p class="text-xs text-slate-300">Profile Menu → <strong>UPI & Payment Settings</strong> → <strong>UPI Automatic Payments</strong> → Select and Cancel.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800/80 space-y-1.5">
+          <h4 class="font-bold text-sm text-rose-400">Apple (iPhone / Mac)</h4>
+          <p class="text-xs text-slate-300">Settings app → Tap your <strong>Apple ID Name</strong> at the top → <strong>Subscriptions</strong> → Cancel Subscription.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center py-6 border-t border-slate-900 text-xs text-slate-500">
+      Built for fun & financial sanity • Zero data stored on servers • All calculations stored locally in your browser
+    </footer>
+  </main>
+
+  <!-- Modal: 9:16 Instagram Story Card Generator -->
+  <div id="exportModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-sm w-full space-y-4">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-bold text-white">Your Story Card</h3>
+        <button onclick="closeExportModal()" class="text-slate-400 hover:text-white text-lg font-bold">&times;</button>
+      </div>
+
+      <!-- The Card to Capture -->
+      <div id="captureCard" class="story-card-gradient border border-slate-700/60 rounded-2xl p-6 text-center space-y-4 shadow-2xl relative overflow-hidden">
+        <div class="text-[10px] tracking-widest uppercase font-bold text-rose-400">SubBurn.in • Reality Check</div>
+        
+        <div>
+          <p class="text-xs text-slate-400 font-medium">My Monthly Subscription Drain</p>
+          <p id="cardMonthly" class="text-4xl font-black text-rose-400 mt-1">₹0</p>
+          <p id="cardAnnual" class="text-xs text-amber-300 font-semibold mt-1">₹0 every single year</p>
+        </div>
+
+        <div class="py-3 px-4 rounded-xl bg-slate-950/60 border border-slate-800 text-left">
+          <p class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold">10-Yr SIP Value</p>
+          <p id="cardSIP" class="text-xl font-bold text-white">₹0</p>
+        </div>
+
+        <div class="text-[11px] text-slate-300 italic px-2">
+          "<span id="cardVerdict">Serial Autopay Victim</span>"
+        </div>
+
+        <div class="text-[9px] text-slate-500 font-mono tracking-tight pt-2 border-t border-slate-800">
+          Check yours in 10 seconds at subburn.in
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <button onclick="downloadStoryImage()" class="w-full py-3 bg-rose-600 hover:bg-rose-500 transition text-white font-bold text-sm rounded-xl shadow-lg shadow-rose-600/30">
+        Download 9:16 Image 📥
+      </button>
+    </div>
+  </div>
+
+  <!-- App Logic -->
+  <script>
+    const SUBSCRIPTION_CATALOG = [
+      { id: 'netflix', name: 'Netflix', price: 649, icon: '🍿', category: 'OTT' },
+      { id: 'prime', name: 'Amazon Prime', price: 299, icon: '📦', category: 'Shopping' },
+      { id: 'hotstar', name: 'JioCinema / Hotstar', price: 149, icon: '🏏', category: 'OTT' },
+      { id: 'spotify', name: 'Spotify Premium', price: 119, icon: '🎵', category: 'Music' },
+      { id: 'youtube', name: 'YouTube Premium', price: 149, icon: '▶️', category: 'Video' },
+      { id: 'swiggy', name: 'Swiggy One', price: 99, icon: '🍔', category: 'Food' },
+      { id: 'zomato', name: 'Zomato Gold', price: 99, icon: '🍕', category: 'Food' },
+      { id: 'chatgpt', name: 'ChatGPT Plus', price: 1999, icon: '🤖', category: 'AI' },
+      { id: 'icloud', name: 'Apple iCloud (50GB+)', price: 75, icon: '☁️', category: 'Cloud' },
+      { id: 'googleone', name: 'Google One (100GB)', price: 130, icon: '📁', category: 'Cloud' },
+      { id: 'cultfit', name: 'Cult.fit / Gym', price: 1250, icon: '💪', category: 'Fitness' },
+      { id: 'jiofiber', name: 'Home Wi-Fi (Jio/Airtel)', price: 825, icon: '📡', category: 'Utility' },
+      { id: 'linkedin', name: 'LinkedIn Premium', price: 1800, icon: '💼', category: 'Work' },
+      { id: 'sonyliv', name: 'SonyLIV', price: 149, icon: '📺', category: 'OTT' },
+      { id: 'zeetv', name: 'ZEE5', price: 99, icon: '🎬', category: 'OTT' },
+      { id: 'appleone', name: 'Apple One', price: 365, icon: '🍎', category: 'Bundle' }
+    ];
+
+    let selectedSubs = JSON.parse(localStorage.getItem('subburn_selected') || '[]');
+
+    function renderGrid() {
+      const grid = document.getElementById('subsGrid');
+      grid.innerHTML = '';
+
+      SUBSCRIPTION_CATALOG.forEach(sub => {
+        const isSelected = selectedSubs.some(s => s.id === sub.id);
+        const card = document.createElement('div');
+        card.className = `cursor-pointer p-3.5 rounded-2xl border transition-all select-none flex flex-col justify-between ${
+          isSelected 
+            ? 'bg-rose-950/40 border-rose-500 shadow-lg shadow-rose-950/50 scale-[1.02]' 
+            : 'bg-slate-900/60 border-slate-800 hover:border-slate-700'
+        }`;
+        card.onclick = () => toggleSub(sub);
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-2xl">${sub.icon}</span>
+            <div class="w-5 h-5 rounded-full border flex items-center justify-center text-[10px] font-bold ${
+              isSelected ? 'bg-rose-500 border-rose-500 text-white' : 'border-slate-700 text-transparent'
+            }">✓</div>
+          </div>
+          <div>
+            <h4 class="font-bold text-sm text-white truncate">${sub.name}</h4>
+            <p class="text-xs text-slate-400">₹${sub.price}/mo</p>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+
+      calculateTotals();
+    }
+
+    function toggleSub(sub) {
+      const index = selectedSubs.findIndex(s => s.id === sub.id);
+      if (index > -1) {
+        selectedSubs.splice(index, 1);
+      } else {
+        selectedSubs.push(sub);
+      }
+      localStorage.setItem('subburn_selected', JSON.stringify(selectedSubs));
+      renderGrid();
+    }
+
+    function addCustomSub() {
+      const name = document.getElementById('customName').value.trim();
+      const amount = parseFloat(document.getElementById('customAmount').value);
+
+      if (!name || isNaN(amount) || amount <= 0) return;
+
+      const customItem = {
+        id: 'custom_' + Date.now(),
+        name: name,
+        price: Math.round(amount),
+        icon: '💳',
+        category: 'Custom'
+      };
+
+      selectedSubs.push(customItem);
+      localStorage.setItem('subburn_selected', JSON.stringify(selectedSubs));
+      document.getElementById('customName').value = '';
+      document.getElementById('customAmount').value = '';
+      renderGrid();
+    }
+
+    function calculateTotals() {
+      const monthlyTotal = selectedSubs.reduce((acc, curr) => acc + curr.price, 0);
+      const annualTotal = monthlyTotal * 12;
+
+      // 10-year monthly SIP at 12% annual return (r = 0.01 per month, n = 120 months)
+      const r = 0.12 / 12;
+      const n = 120;
+      const sipFutureValue = monthlyTotal > 0 
+        ? Math.round(monthlyTotal * ((Math.pow(1 + r, n) - 1) / r) * (1 + r)) 
+        : 0;
+
+      // Cultural equivalent
+      const biryaniCount = Math.round(annualTotal / 250);
+
+      // Update DOM
+      document.getElementById('topMonthly').innerText = `₹${monthlyTotal.toLocaleString('en-IN')}`;
+      document.getElementById('topAnnual').innerText = `₹${annualTotal.toLocaleString('en-IN')}`;
+      document.getElementById('statMonthly').innerText = `₹${monthlyTotal.toLocaleString('en-IN')}`;
+      document.getElementById('statAnnual').innerText = `₹${annualTotal.toLocaleString('en-IN')}`;
+      document.getElementById('statSIP').innerText = `₹${sipFutureValue.toLocaleString('en-IN')}`;
+      document.getElementById('selectedCount').innerText = `${selectedSubs.length} selected`;
+      document.getElementById('statEquivalent').innerText = `Equivalent to: ${biryaniCount} plates of Biryani`;
+
+      // Modal Card sync
+      document.getElementById('cardMonthly').innerText = `₹${monthlyTotal.toLocaleString('en-IN')}/mo`;
+      document.getElementById('cardAnnual').innerText = `₹${annualTotal.toLocaleString('en-IN')} wasted every year`;
+      document.getElementById('cardSIP').innerText = `₹${sipFutureValue.toLocaleString('en-IN')}`;
+
+      // Verdict phrase
+      let verdict = "Financial Saint";
+      if (monthlyTotal > 1000) verdict = "Casual Autopay Leaker";
+      if (monthlyTotal > 2500) verdict = "Serial Autopay Victim";
+      if (monthlyTotal > 5000) verdict = "Chief Funding Officer of Tech CEOs";
+      document.getElementById('cardVerdict').innerText = verdict;
+    }
+
+    function openExportModal() {
+      document.getElementById('exportModal').classList.remove('hidden');
+    }
+
+    function closeExportModal() {
+      document.getElementById('exportModal').classList.add('hidden');
+    }
+
+    function downloadStoryImage() {
+      const card = document.getElementById('captureCard');
+      html2canvas(card, { scale: 3, backgroundColor: null }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'my-subburn-reality-check.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    }
+
+    // Initialize on load
+    renderGrid();
+  </script>
+</body>
+</html>
